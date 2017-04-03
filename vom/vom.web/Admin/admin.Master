@@ -1,0 +1,186 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="admin.master.cs" Inherits="vom.web.Admin.admin" %>
+
+<script runat="server">
+    public string user_uuid;
+    public string emp_uuid;
+    public System.Data.DataRow emp;
+    public System.Data.DataRow user;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        user_uuid = Request.QueryString["user_uuid"];
+        System.Data.DataTable dt = vom.logic.dal.Factory.Company.GetCompanyUser(new Guid(user_uuid));
+        if (dt.Rows.Count > 0)
+        {
+            user = dt.Rows[0];
+        }
+        else
+        {
+            emp_uuid = Request.QueryString["user_uuid"];
+            System.Data.DataTable dtem = vom.logic.dal.Factory.Employee.GetEmployee(new Guid(emp_uuid));
+            if (dtem.Rows.Count > 0)
+            {
+                user = dtem.Rows[0];
+                if (Convert.ToBoolean(user["is_employee"]) == true)
+                {
+                    Response.Redirect("~/Employee/default.aspx?user_uuid=" + user_uuid);
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+    }
+</script>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>VOM Admin | Dashboard</title>
+    <!-- Web Fonts -->
+    <link rel='shortcut icon' href="../Assets/img/favicon.ico" type='image/x-icon'/ >
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
+
+    <link href="../Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Assets/css/style.css" rel="stylesheet" />
+    <link href="../Assets/css/animate.css" rel="stylesheet" />
+    <link href="../Assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="../Assets/css/custom.css" rel="stylesheet" />
+    <link href="../Assets/css/plugins/datatables.min.css" rel="stylesheet" />
+    <link href="../Assets/css/plugins/footable.core.css" rel="stylesheet" />
+
+    <!-- Start JS Files -->
+ <%--   <script src="../Assets/js/plugins/datatables.min.js"></script>
+    <script src="../Assets/js/plugins/footable.all.min.js"></script>--%>
+     <!-- End JS Files -->
+
+    <asp:ContentPlaceHolder ID="header_resource" runat="server">
+
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div id="header">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-transparent">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="dashboard.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-tachometer vom-green"></i> Dashboard</a>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav" id="admin-menu">
+                            <li><a href="category.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-arrows vom-green"></i> Category</a></li>
+                            <li><a href="project.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-folder-open-o vom-green"></i>Project</a></li>
+                            <li><a href="employee.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-users vom-green"></i> Employee</a></li>
+                            <li><a href="task.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-tasks vom-green"></i> Task</a></li>
+                            <%--<li><a href="create_admin.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-user vom-green"></i> Admin</a></li>--%>
+                        </ul>
+                        <ul class="nav navbar-nav pull-right navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Welcome,</span> <% = user["owner_name"] %> <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="profile.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-pencil"></i> Profile</a></li>
+                                   <%-- <li><a href="#">Contacts</a></li>--%>
+                                    <li><a href="changepassword.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-lock"></i> Change Password</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="../login.html"><i class="fa fa-power-off"></i> Log Out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </nav>
+        </div>
+        <div class="main-content">
+            <asp:ContentPlaceHolder ID="ContentBody" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <hr />
+        <footer class="navbar-static-bottom">
+            <div class="container">
+                <p class="footerNav"><a href="default.aspx"><b>VOM</b></a> &copy 2016 All rights reserved.</p>
+            </div>
+        </footer>
+    </form>
+    <script src="../Assets/js/jquery-2.1.1.js"></script>
+    <script src="../Assets/js/bootstrap.min.js"></script>    
+    <asp:ContentPlaceHolder ID="footer_js" runat="server"></asp:ContentPlaceHolder>
+    <script>
+        var user_uuid = '<%=user_uuid%>';
+        var is_verified = '<%=user["is_verified"].ToString().ToLower()%>';
+        var email = '<%=user["email"]%>';
+       
+
+        $(document).ready(function () {
+            if(is_verified == 'false'){
+                $("#message").html('<div  class="alert alert-danger" role="alert">Your email address is not verified. Please check your email and click the verification email. <strong><a href="#" onClick="verify_email()"> Click here to resend that email</a></strong>.</div>');
+                //$("#admin-menu").hide();
+            }
+            else
+            {
+                $("#verify_stat").html('<div class="pull-right vom-green"><i class="fa fa-check"></i><strong>Verified</strong></div>');
+            }
+        });
+
+        function verify_email() {
+            var data = {
+                email: email
+            };
+            $("#message").html('<b>Sending Email! Please wait...</b>');
+            $.ajax({
+                url: '../api/v1/company/email_verify',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (response) {
+                    //data = response.responseJSON[0];
+                    $("#message").html('<div  class="alert alert-info" role="alert">Please check your email to verify.If mail not received <a href="#" onClick="verify_email()"> Click here</a>.</div>');
+                },
+                error: function (response) {
+                     $("#message").html('<div  class="alert alert-danger" role="alert">Some error occured. Please try again!</div>');
+                }
+            });
+            return false;
+        }
+
+    </script>
+
+    <script>
+        function UpdatePassword() {
+            var data = {
+                uuid: '<%=user["uuid"]%>',
+                password: $('#old_password').val(),
+                new_password: $('#new_password').val()
+            };
+            $.ajax({
+                url: '../api/v1/company/Changepassword',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (response) {
+                    data = response.responseJSON[0];
+                   // alert(data.uuid);
+                    if (data.uuid) {
+                        $("#change_password_alert").html('<div class="alert alert-success" role="alert">Password updated successfully.</div>');
+                    } else {
+                        $("#change_password_alert").html('<div class="alert alert-danger" role="alert">Password update Failed. Please try again !</div>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+            return false;
+        }
+        </script>
+</body>
+</html>

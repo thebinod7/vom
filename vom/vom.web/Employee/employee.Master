@@ -1,0 +1,174 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="employee.Master.cs" Inherits="vom.web.Employee.employee" %>
+
+<script runat="server">
+    public string user_uuid;
+    public System.Data.DataRow user;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        user_uuid = Request.QueryString["user_uuid"];
+        System.Data.DataTable dt = vom.logic.dal.Factory.Employee.GetEmployee(new Guid(user_uuid));
+        if (dt.Rows.Count > 0)
+        {
+            user = dt.Rows[0];
+        }
+    }
+</script>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>VOM || Employee</title>
+    <!-- Web Fonts -->
+    <link rel='shortcut icon' href="../Assets/img/favicon.ico" type='image/x-icon'/ >
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
+
+    <link href="../Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Assets/css/style.css" rel="stylesheet" />
+    <link href="../Assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="../Assets/css/custom.css" rel="stylesheet" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div id="header">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-transparent">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="default.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-building-o vom-green"></i> VOM</a>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <div class="col-sm-4 col-md-4 nav-search">
+                            <form class="navbar-form" role="search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="input_search" placeholder="Search for tasks">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" onclick="SearchTask()" id="btn_search" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            <%--<li><a href="#">[0]</a></li>--%>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>Welcome,</span> <%=user["emp_name"]%> <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="emp_profile.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-pencil"></i> Profile</a></li>
+                                    <li><a href="emp_changepassword.aspx?user_uuid=<%=user["uuid"]%>"><i class="fa fa-lock"></i> Change Password</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="../login.html"><i class="fa fa-power-off"></i> Log Out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </nav>
+        </div>
+        <div class="main-content">
+            <asp:ContentPlaceHolder ID="content_body" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <hr />
+        <footer class="navbar-static-bottom">
+            <div class="container">
+                <p class="footerNav"><a href="default.aspx"><b>VOM</b></a> &copy 2016 All rights reserved.</p>
+            </div>
+        </footer>
+    </form>
+    <script src="../Assets/js/jquery-2.1.1.js"></script>
+    <script src="../Assets/js/bootstrap.min.js"></script>
+    <asp:ContentPlaceHolder ID="footer_assets" runat="server"></asp:ContentPlaceHolder>
+    <script>
+        var user_uuid = '<%=user_uuid%>';
+        var is_verified = '<%=user["is_verified"].ToString().ToLower()%>';
+        var email = '<%=user["email"]%>';
+
+
+        $(document).ready(function () {
+            if (!is_verified) {
+                $("#message").html('<div  class="alert alert-danger" role="alert">Your email address is not verified. Please check your email and click the verification email. <strong><a href="#" onClick="verify_email()"> Click here to resend that email</a></strong>.</div>');
+            }
+            else {
+                $("#verify_stat").html('<div class="pull-right vom-green"><i class="fa fa-check"></i><strong>Verified</strong></div>');
+            }
+        });
+
+        function verify_email() {
+            var data = {
+                email: email
+            };
+            $("#message").html('<img src="Assets/img/loader.gif');
+            $.ajax({
+                url: '../api/v1/company/email_verify',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (response) {
+                    //data = response.responseJSON[0];
+                    $("#message").html('<div  class="alert alert-info" role="alert">Please check your email to verify.If mail not received <a href="#" onClick="verify_email()"> Click here</a>.</div>');
+                },
+                error: function (response) {
+                    $("#message").html('<div  class="alert alert-danger" role="alert">Some error occured. Please try again!</div>');
+                }
+            });
+            return false;
+        }
+
+    </script>
+    <script>
+        function SearchTask() {
+            $('#tblTaskList').empty();
+            var search_txt = $('#input_search').val()
+            rs_ajax({
+                url: '../api/v1/task/search/' + search_txt + '/' + user_uuid + '/',
+                type: 'GET',
+                complete: function (response) {
+                    data = response.responseJSON;
+                    $.each(data, function (i, d) {
+                        $('#tblTaskList').append('<tr><td style="display:none">' + d.uuid + '</td><td>' + d.task_name + '</td><td>' + d.due_date + '</td><td>' + d.status + '</td><td>' + d.progress + '</td><td><a class="btn btn-primary btn-sm"  href="edit_task.aspx?user_uuid= ' + user_uuid + '&task_uuid= ' + d.uuid + ' "><i class="fa fa-pencil"></i> Edit</a></td></tr>');
+                    })
+                },
+                error: function (response) {
+                    $("#message-alert").html('<div  class="alert alert-warning" role="alert">Some error occured.</div>');
+                }
+            });
+        }
+
+        function UpdateEmpPassword() {
+            var data = {
+                uuid: '<%=user["uuid"]%>',
+                password: $('#old_password').val(),
+                new_password: $('#new_password').val()
+            };
+            $.ajax({
+                url: '../api/v1/employee/change_emp_password',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (response) {
+                    data = response.responseJSON[0];
+                    // alert(data.uuid);
+                    if (data.uuid) {
+                        $("#change_password_alert").html('<div class="alert alert-success" role="alert">Password updated successfully.</div>');
+                    } else {
+                        $("#change_password_alert").html('<div class="alert alert-danger" role="alert">Password update Failed. Please try again !</div>');
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+            return false;
+        }
+        </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+﻿#forgot-pass-link a {
+    float:right;
+    font-size: 100%; 
+    position: relative;
+    top:-15px;
+    font-weight:600;
+    text-decoration:underline;
+    color:#2f4050;
+}

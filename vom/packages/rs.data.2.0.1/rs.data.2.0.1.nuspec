@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>rs.data</id>
+    <version>2.0.1</version>
+    <authors>Santosh Shrestha</authors>
+    <owners>Santosh Shrestha</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Rumsan data package</description>
+    <tags>rs</tags>
+  </metadata>
+</package>

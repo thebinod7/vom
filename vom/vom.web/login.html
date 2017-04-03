@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>VOM User | Login Fullscreen</title>
+    <meta name="description" content="iDea a Bootstrap-based, Responsive HTML5 Template">
+    <meta name="author" content="htmlcoder.me">
+
+    <!-- Mobile Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <!-- Web Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap core CSS -->
+    <link href="Assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome CSS -->
+    <link href="Assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+
+    <!-- iDea core CSS file -->
+    <link href="Assets/css/style.css" rel="stylesheet" />
+
+    <link href="Assets/css/custom-second.css" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<!-- body classes:
+        "boxed": boxed layout mode e.g. <body class="boxed">
+        "pattern-1 ... pattern-9": background patterns for boxed layout mode e.g. <body class="boxed pattern-1">
+-->
+<body class="no-trans">
+
+    <div class="container">
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Sign In</div>
+                    <div id="forgot-pass-link"><a href="forgotpassword.html">Forgot password?</a></div>
+                </div>
+
+                <div style="padding-top:30px" class="panel-body">
+
+                    <div id="loginmessage"></div>
+
+                    <form id="loginform" class="form-horizontal" role="form">
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="email" type="text" class="form-control" name="username" value="" placeholder="username or email">
+                        </div>
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="loginpassword" type="password" class="form-control" name="password" placeholder="password">
+                        </div>
+
+                        <div class="input-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div style="margin-top:10px" class="form-group">
+                            <!-- Button -->
+
+                            <div class="col-sm-12 controls">
+                                <a id="btn-login" onclick="Login();" href="#" class="btn btn-lg btn-primary">Sign In  </a>
+                                <!--<a id="btn-fblogin" href="#" class="btn btn-success">Login with Facebook</a>-->
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-12 control">
+                                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%">
+                                    Don't have an account!
+                                    <a href="#" onclick="$('#loginbox').hide(); $('#signupbox').show()">
+                                        <strong>Sign Up Here</strong> 
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Sign Up</div>
+                    <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
+                </div>
+                <div class="panel-body">
+                    <div id="signupalert">
+                    </div>
+                    <form id="signupform" class="form-horizontal" role="form">
+
+                        <div class="form-group">
+                            <label for="company" class="col-md-3 control-label">Company Name</label>
+                            <div class="col-md-9">
+                                <input type="text" id="company" class="form-control" name="company">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company" class="col-md-3 control-label">Company Owner</label>
+                            <div class="col-md-9">
+                                <input type="text" id="owner" class="form-control" name="owner">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactnum" class="col-md-3 control-label">Contact Number</label>
+                            <div class="col-md-9">
+                                <input type="text" id="contactnum" class="form-control" name="contactnum">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="col-md-3 control-label">Email</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txtemail" class="form-control" placeholder="lorem@yourcompany.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="col-md-3 control-label">Password</label>
+                            <div class="col-md-9">
+                                <input type="password" id="password" class="form-control" name="passwd" placeholder="Password">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="address" class="col-md-3 control-label">Address</label>
+                            <div class="col-md-9">
+                                <input type="text" id="address" class="form-control" name="address">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="website" class="col-md-3 control-label">Website URL</label>
+                            <div class="col-md-9">
+                                <input type="text" id="website" class="form-control" name="website" placeholder="www.yourcompany.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- Button -->
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="btn-signup" type="button" onclick="Signup()" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Sign Up</button>
+                               <!-- <span style="margin-left:8px;">or</span>-->
+                            </div>
+                        </div>
+
+                        <!--<div style="border-top: 1px solid #999; padding-top:20px" class="form-group">
+
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="btn-fbsignup" type="button" class="btn btn-primary"><i class="icon-facebook"></i>   Sign Up with Facebook</button>
+                            </div>
+
+                        </div>-->
+
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- page-wrapper end -->
+    <!-- JavaScript files placed at the end of the document so the pages load faster
+    ================================================== -->
+    <!-- Jquery and Bootstap core js files -->
+    <script src="Assets/js/jquery-2.1.1.js"></script>
+    <script src="Assets/js/bootstrap.min.js"></script>
+    <script>
+        function Signup() {
+            var data = {
+                company_name: $('#company').val(),
+                owner_name: $('#owner').val(),
+                email: $('#txtemail').val(),
+                password: $('#password').val(),
+                website_url: $('#website').val(),
+                contact_number: $('#contactnum').val(),
+                company_address: $('#address').val()
+            };
+           // alert(data.email);
+            $("#signupalert").html('<img src="Assets/img/loader.gif"/>');
+            $.ajax({
+                url: 'api/v1/company/signup',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (response) {
+                    data = response.responseJSON[0];
+                    console.log(data.uuid);
+                    if (!data.uuid == "") {
+                        location.replace("Admin/dashboard.aspx?user_uuid=" + data.uuid);
+                    }
+                    if (!data.ErrorMessage) {
+                        // location.replace("Admin/dashboard.aspx");
+                        location.replace("Admin/dashboard.aspx?user_uuid=" + data.uuid);
+                    } else {
+                        $("#signupalert").html('<div  class="alert alert-warning" role="alert">' + data.ErrorMessage + '</div>');
+                    }
+                },
+                error: function (response) {
+                    $("#signupalert").html('<div  class="alert alert-error" role="alert">Some error occured.</div>');
+                }
+            });
+            return false;
+        }
+
+        function Login() {
+            var model = {
+                email: $('#email').val(),
+                Password: $('#loginpassword').val()
+            };
+            $("#loginmessage").html('<img src="Assets/img/loader.gif"/>');
+            $.ajax({
+                url: 'api/v1/company/login',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(model),
+                contentType: 'application/json; charset=utf-8',
+                complete: function (response) {
+                    data = response.responseJSON[0];
+                    //console.log(data.uuid);
+                    if (!data.ErrorMessage) {
+                        //location.replace("Admin/dashboard.aspx");
+                        //alert(data.is_employee);
+                        location.replace("Admin/dashboard.aspx?user_uuid=" + data.uuid);
+                    } else {
+                        $("#loginmessage").html('<div  class="alert alert-warning" role="alert">' + data.ErrorMessage + '</div>');
+                        // alert(data.ErrorMessage);
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+            return false;
+        }
+    </script>
+</body>
+</html>
